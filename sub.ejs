@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="<%= data.DEFAULT_LANG ? 'fa' : 'en' %>" data-lang="<%= data.DEFAULT_LANG ? 'fa' : 'en' %>"
     class="<%= data.enable ? 'rtl' : '' %>">
 
@@ -134,7 +134,7 @@
         }
         .download-section { margin-top: 20px; padding-top: 15px; }
         .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; text-align: center; color: var(--text-primary, #ffffff); position: relative; }
-        .section-title::after { content: ""; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 3px; }
+        .section-title::after { content: ""; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 135px; height: 3px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 3px; }
         .platforms-container { background: rgba(31, 41, 55, 0.5); border: 2px solid rgba(75, 85, 99, 0.7); border-radius: 16px; padding: 15px; transition: all 0.3s ease; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         body.light .platforms-container { background: rgba(255, 255, 255, 0.8) !important; border-color: #9ca3af !important; }
         .platforms-container:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025); }
@@ -190,9 +190,15 @@
                 <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl">
                 </div>
                 <div class="relative bg-indigo-500/10 p-3 rounded-full inline-flex">
-                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="profileGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#6D28D9;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="20" cy="12" r="8" fill="url(#profileGradient)" />
+                        <path d="M20 22C14.48 22 10 25.13 10 29C10 31.21 11.79 33 14 33H26C28.21 33 30 31.21 30 29C30 25.13 25.52 22 20 22Z" fill="url(#profileGradient)" />
                     </svg>
                 </div>
             </div>
@@ -397,12 +403,12 @@
         const { useState, useEffect, useRef } = React;
 
         const MusicPlayer = () => {
-const [tracks] = useState([
-    { id: 1, title: "مرتضی پاشایی", artist: "آره هوس تورو", src: "https://nicmusic.musitraf.com/nicmusic/001/065/Morteza%20Pashaei%20-%20Nafas.mp3" },
-    { id: 2, title: "مرتضی پاشایی", artist: "قلبم رو تکراره", src: "https://nicmusic.musitraf.com/nicmusic/004/026/Moreta%20Pashaei%20-%20Ghalbam%20Roo%20Tekrare.mp3" },
-    { id: 3, title: "مرتضی پاشایی", artist: "حالا حالاها", src: "https://nicmusic.musitraf.com/nicmusic/003/094/10.%20Hala%20Hala%20Ha%20[128].mp3" },
-    { id: 4, title: "مرتضی پاشایی", artist: "یه نفر", src: "https://nicmusic.musitraf.com/nicmusic/001/029/Morteza%20Pashaei%20-%20Yeki%20Hast.mp3" }
-]);
+            const [tracks] = useState([
+                { id: 1, title: "مرتضی پاشایی", artist: "آره هوس تورو", src: "https://nicmusic.musitraf.com/nicmusic/001/065/Morteza%20Pashaei%20-%20Nafas.mp3" },
+                { id: 2, title: "مرتضی پاشایی", artist: "قلبم رو تکراره", src: "https://nicmusic.musitraf.com/nicmusic/004/026/Moreta%20Pashaei%20-%20Ghalbam%20Roo%20Tekrare.mp3" },
+                { id: 3, title: "مرتضی پاشایی", artist: "حالا حالاها", src: "https://nicmusic.musitraf.com/nicmusic/003/094/10.%20Hala%20Hala%20Ha%20[128].mp3" },
+                { id: 4, title: "مرتضی پاشایی", artist: "یه نفر", src: "https://nicmusic.musitraf.com/nicmusic/001/029/Morteza%20Pashaei%20-%20Yeki%20Hast.mp3" }
+            ]);
             const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
             const [isPlaying, setIsPlaying] = useState(false);
             const [currentTime, setCurrentTime] = useState(0);
