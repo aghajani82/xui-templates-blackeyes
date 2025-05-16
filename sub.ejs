@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="<%= data.DEFAULT_LANG ? 'fa' : 'en' %>" data-lang="<%= data.DEFAULT_LANG ? 'fa' : 'en' %>"
     class="<%= data.enable ? 'rtl' : '' %>">
 
@@ -9,8 +9,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@33.003/Vazirmatn-Variable-font-face.css"
         rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.9/babel.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -38,82 +43,120 @@
 
     <style>
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        body { font-family: 'Vazirmatn', sans-serif; }
+        body.light { background: #f3f4f6 !important; color: #1f2937 !important; }
+        body.light .glass { background: rgba(255, 255, 255, 0.8) !important; border-color: #9ca3af !important; color: #1f2937 !important; }
+        body.light h1, body.light h2, body.light h3, body.light p, body.light span { color: #1f2937 !important; }
+        body.light .bg-gradient-to-br { background-image: linear-gradient(to bottom right, #f3f4f6, #e5e7eb, #f3f4f6) !important; }
+        #theme-toggle { position: fixed; top: 1rem; left: 1rem; z-index: 50; padding: 0.5rem; border-radius: 9999px; background: rgba(31, 41, 55, 0.5); cursor: pointer; transition: all 0.3s; }
+        #theme-toggle:hover { background: rgba(31, 41, 55, 0.7); }
+        .app-button { 
+            display: flex; 
+            flex-direction: row-reverse;
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.5rem; 
+            padding: 0.75rem 1.5rem; 
+            border-radius: 0.75rem; 
+            transition: all 0.3s; 
+            background: linear-gradient(to right, rgba(79, 70, 229, 0.8), rgba(109, 40, 217, 0.8)); 
+            font-size: 0.875rem; 
+            width: 100%; 
+            max-width: 600px; 
+            text-align: center; 
+        }
+        .app-button:hover { background: linear-gradient(to right, rgba(79, 70, 229, 0.9), rgba(109, 40, 217, 0.9)); transform: translateY(-2px); }
+        .support-buttons { 
+            display: flex; 
+            gap: 1rem; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+        .music-player-controls { 
+            display: flex; 
+            flex-wrap: nowrap; 
+            gap: 1rem; 
+            align-items: center; 
+            width: 100%; 
+        }
+        .music-player-seek { 
+            flex: 1; 
+            min-width: 100px; 
+        }
+        .music-player-volume { 
+            width: 60px; 
+            max-width: 60px; 
+        }
+        @media (max-width: 640px) { 
+            .support-buttons { 
+                flex-direction: column; 
+                gap: 0.5rem; 
+            } 
+            .app-button { 
+                padding: 0.75rem 1rem; 
+                font-size: 0.875rem; 
+                max-width: 100%; 
+            } 
+            .music-player-container { 
+                overflow-x: hidden; 
             }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .music-player-controls { 
+                gap: 0.1rem !important; 
+                flex-wrap: nowrap; 
+            }
+            .music-player-controls button { 
+                width: 24px; 
+                height: 24px; 
+                padding: 0.25rem; 
+            }
+            .music-player-controls button svg { 
+                width: 12px; 
+                height: 12px; 
+            }
+            .music-player-seek { 
+                width: 90px !important; 
+                max-width: 90px !important; 
+                flex: 0 0 auto; 
+            }
+            .music-player-volume { 
+                width: 50px !important; 
+                max-width: 50px !important; 
+                flex: 0 0 auto; 
+            }
+            .music-player-controls span { 
+                font-size: 9px !important; 
             }
         }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease-out forwards;
+        .download-section { margin-top: 20px; padding-top: 15px; }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; text-align: center; color: var(--text-primary, #ffffff); position: relative; }
+        .section-title::after { content: ""; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 3px; }
+        .platforms-container { background: rgba(31, 41, 55, 0.5); border: 2px solid rgba(75, 85, 99, 0.7); border-radius: 16px; padding: 15px; transition: all 0.3s ease; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        body.light .platforms-container { background: rgba(255, 255, 255, 0.8) !important; border-color: #9ca3af !important; }
+        .platforms-container:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025); }
+        .platforms-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; }
+        .platform-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease; text-align: center; flex: 1; min-width: 100px; padding: 10px; border-radius: 8px; background: linear-gradient(to right, rgba(79, 70, 229, 0.8), rgba(109, 40, 217, 0.8)); color: #ffffff; }
+        .platform-card:hover { background: linear-gradient(to right, rgba(79, 70, 229, 0.9), rgba(109, 40, 217, 0.9)); transform: translateY(-5px); }
+        .platform-icon { font-size: 24px; margin-bottom: 8px; }
+        .platform-card span { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .progress-bar { transition: width 0.1s linear; }
+        .mute-button:hover { color: #3b82f6; }
+        .connection-link {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            font-weight: 500;
+            font-size: 0.875rem;
         }
-
-        .glass {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+        .support-buttons .fa-telegram-plane {
+            font-size: 1.25rem;
         }
-
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-        }
-
-        body.light {
-            background: #f3f4f6 !important;
-            color: #1f2937 !important;
-        }
-
-        body.light .glass {
-            background: rgba(255, 255, 255, 0.8) !important;
-            border-color: #d1d5db !important;
-            color: #1f2937 !important;
-        }
-
-        body.light h1,
-        body.light h2,
-        body.light h3,
-        body.light p,
-        body.light span {
-            color: #1f2937 !important;
-        }
-
-        body.light .bg-gradient-to-br {
-            background-image: linear-gradient(to bottom right, #f3f4f6, #e5e7eb, #f3f4f6) !important;
-        }
-
-        #theme-toggle {
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 50;
-            padding: 0.5rem;
-            border-radius: 9999px;
-            background: rgba(31, 41, 55, 0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        #theme-toggle:hover {
-            background: rgba(31, 41, 55, 0.7);
-        }
-
-        .app-button {
-            display: flex;
+        .stats-icon {
+            display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            transition: all 0.3s;
-            background: linear-gradient(to right, rgba(79, 70, 229, 0.8), rgba(109, 40, 217, 0.8));
-        }
-
-        .app-button:hover {
-            background: linear-gradient(to right, rgba(79, 70, 229, 0.9), rgba(109, 40, 217, 0.9));
-            transform: translateY(-2px);
+            justify-content: center;
         }
     </style>
 
@@ -131,7 +174,7 @@
         null; } } %>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-4 md:p-8">
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-2 md:p-4">
     <button id="theme-toggle" onclick="toggleTheme()">
         <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
@@ -140,34 +183,33 @@
         </svg>
     </button>
 
-    <div class="max-w-2xl mx-auto space-y-6">
+    <div class="max-w-2xl mx-auto space-y-2">
         <!-- Subscription Info Section -->
-        <div class="glass bg-gray-800/50 rounded-2xl p-8 text-center border border-gray-700/50 shadow-xl fade-in">
+        <div class="glass bg-gray-800/50 rounded-2xl p-6 text-center border-2 border-gray-600 shadow-xl fade-in">
             <div class="relative">
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl">
                 </div>
-                <div class="relative bg-indigo-500/10 p-4 rounded-full inline-flex">
-                    <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="relative bg-indigo-500/10 p-3 rounded-full inline-flex">
+                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </div>
             </div>
-            <h1 class="text-3xl font-bold mt-4 mb-2">اطلاعات اشتراک</h1>
-            <p class="text-gray-400 text-lg">شناسه: <%= data.email %>
-            </p>
+            <h1 class="text-2xl font-bold mt-2 mb-1">اطلاعات اشتراک</h1>
+            <p class="text-gray-400 text-base"><span><%= data.email %></span> :شناسه</p>
         </div>
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <!-- Download -->
-            <div class="glass bg-gray-800/50 rounded-xl p-4 border border-gray-700/50 shadow-lg fade-in">
-                <div class="flex items-center space-x-3">
-                    <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="glass bg-gray-800/50 rounded-xl p-4 border-2 border-gray-600 shadow-lg fade-in text-center">
+                <div class="flex items-center justify-center space-x-2">
+                    <span class="text-gray-400">دانلود</span>
+                    <svg class="w-5 h-5 text-cyan-400 stats-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    <span class="text-gray-400">دانلود</span>
                 </div>
                 <p class="text-xl font-semibold mt-2">
                     <%= formatBytes(data.down) %>
@@ -175,13 +217,13 @@
             </div>
 
             <!-- Upload -->
-            <div class="glass bg-gray-800/50 rounded-xl p-4 border border-gray-700/50 shadow-lg fade-in">
-                <div class="flex items-center space-x-3">
-                    <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="glass bg-gray-800/50 rounded-xl p-4 border-2 border-gray-600 shadow-lg fade-in text-center">
+                <div class="flex items-center justify-center space-x-2">
+                    <span class="text-gray-400">آپلود</span>
+                    <svg class="w-5 h-5 text-yellow-400 stats-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
-                    <span class="text-gray-400">آپلود</span>
                 </div>
                 <p class="text-xl font-semibold mt-2">
                     <%= formatBytes(data.up) %>
@@ -189,13 +231,13 @@
             </div>
 
             <!-- Expiry Date -->
-            <div class="glass bg-gray-800/50 rounded-xl p-4 border border-gray-700/50 shadow-lg fade-in">
-                <div class="flex items-center space-x-3">
-                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            <div class="glass bg-gray-800/50 rounded-xl p-4 border-2 border-gray-600 shadow-lg fade-in text-center">
+                <div class="flex items-center justify-center space-x-2">
+                    <span class="text-gray-400">تاریخ انقضا</span>
+                    <svg class="w-5 h-5 text-emerald-400 stats-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-cap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span class="text-gray-400">تاریخ انقضا</span>
                 </div>
                 <p class="text-xl font-semibold mt-2" id="expireDate">
                     <% 
@@ -235,35 +277,33 @@
             </div>
 
             <!-- Status -->
-            <div class="glass bg-gray-800/50 rounded-xl p-4 border border-gray-700/50 shadow-lg fade-in">
-                <div class="flex items-center space-x-3">
-                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4-4" />
-                    </svg>
+            <div class="glass bg-gray-800/50 rounded-xl p-4 border-2 border-gray-600 shadow-lg fade-in text-center">
+                <div class="flex items-center justify-center space-x-2">
                     <span class="text-gray-400">وضعیت</span>
+                    <i class="fas fa-check-circle w-6 h-6 text-green-400 stats-icon"></i>
                 </div>
                 <p class="text-xl font-semibold mt-2" id="status"><%= data.enable ? 'فعال' : 'غیرفعال' %></p>
             </div>
         </div>
 
         <!-- Usage Overview -->
-        <div class="glass bg-gray-800/50 rounded-xl p-6 border border-gray-700/50 shadow-lg fade-in">
+        <div class="glass bg-gray-800/50 rounded-xl p-6 border-2 border-gray-600 shadow-lg fade-in text-center">
             <h2 class="text-lg font-semibold mb-4">نمای کلی استفاده</h2>
             <div class="w-full bg-gray-700 rounded-full h-2 mb-4">
                 <div id="usageBar"
                     class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-2 rounded-full transition-all duration-500">
                 </div>
             </div>
-            <div class="flex justify-between text-sm text-gray-400">
+            <div class="flex justify-center text-sm text-gray-400 gap-4">
                 <span id="usedText"></span>
                 <span id="remainingText"></span>
             </div>
         </div>
 
         <!-- Connection Details -->
-        <div class="glass bg-gray-800/50 rounded-xl p-6 border border-gray-700/50 shadow-lg fade-in">
-            <div class="flex justify-between items-center cursor-pointer" onclick="toggleDropdown()">
-                <h2 class="text-lg font-semibold">جزئیات اتصال</h2>
+        <div class="glass bg-gray-800/50 rounded-xl p-6 border-2 border-gray-600 shadow-lg fade-in">
+            <div class="flex flex-row-reverse justify-between items-center cursor-pointer" onclick="toggleDropdown()">
+                <h2 class="text-lg font-semibold text-right">جزئیات اتصال</h2>
                 <svg id="dropdownIcon" xmlns="http://www.w3.org/2000/svg"
                     class="w-5 h-5 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -299,65 +339,265 @@
         </div>
 
         <!-- App Buttons -->
-        <div class="flex flex-wrap gap-4 justify-center fade-in">
-            <a href="v2rayng://install-config?url=<%= data.suburl %>" class="app-button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18l-6-6h12l-6 6z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12" />
-                </svg>
-                باز کردن در V2rayNG
-            </a>
-            <a href="streisand://import/<%= data.suburl %>" class="app-button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18l-6-6h12l-6 6z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12" />
-                </svg>
-                باز کردن در Streisand
-            </a>
+        <div class="download-section fade-in">
+            <h2 class="section-title">اتصال به اپلیکیشن</h2>
+            <div class="platforms-container glass">
+                <div class="platforms-grid">
+                    <a href="https://github.com/2dust/v2rayNG/releases/download/1.10.2/v2rayNG_1.10.2_universal.apk" class="platform-card">
+                        <i class="fab fa-android platform-icon"></i>
+                        <span>آندروید</span>
+                    </a>
+                    <a href="https://github.com/2dust/v2rayN/releases/download/7.11.3/v2rayN-windows-64.zip" class="platform-card">
+                        <i class="fab fa-windows platform-icon"></i>
+                        <span>ویندوز</span>
+                    </a>
+                    <a href="https://apps.apple.com/us/app/streisand/id6450534064" class="platform-card">
+                        <i class="fab fa-apple platform-icon"></i>
+                        <span>آیفون</span>
+                    </a>
+                    <a href="https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.3/Clash.Verge_2.2.3_arm64_fixed_webview2-setup.exe" class="platform-card">
+                        <i class="fab fa-linux platform-icon"></i>
+                        <span>لینوکس</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Music Player -->
+        <div class="glass bg-gray-800/50 rounded-xl p-4 border-2 border-gray-600 shadow-lg fade-in music-player-container">
+            <div id="music-player"></div>
         </div>
 
         <!-- Support Section -->
-    <% if (data.TELEGRAM_URL || data.WHATSAPP_URL) { %>
-        <div class="glass bg-gray-800/50 rounded-xl p-6 border border-gray-700/50 shadow-lg fade-in">
+        <div class="glass bg-gray-800/50 rounded-xl p-6 border-2 border-gray-600 shadow-lg fade-in">
             <h2 class="text-2xl font-semibold text-center mb-6">پشتیبانی</h2>
             <div class="grid gap-6">
-            <div class="p-4 rounded-lg bg-gray-900/30">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                
-                <% if (data.WHATSAPP_URL) { %>
-                    <a href="<%= data.WHATSAPP_URL %>" class="app-button">
-                    ارتباط با پشتیبانی واتس اپ
-                    </a>
-                <% } %>
-                
-                <% if (data.TELEGRAM_URL) { %>
-                    <a href="<%= data.TELEGRAM_URL %>" target="_blank" class="app-button">
-                    ارتباط با پشتیبانی تلگرام
-                    </a>
-                <% } %>
-
+                <div class="p-4 rounded-lg bg-gray-900/30">
+                    <div class="support-buttons">
+                        <% 
+                        const telegramID = '@mohammad_hosein_aghajani';
+                        const telegramLink = telegramID ? `https://t.me/${telegramID.replace('@', '')}` : '';
+                        %>
+                        <% if (telegramLink) { %>
+                        <a href="<%= telegramLink %>" target="_blank" class="app-button">
+                            <i class="fab fa-telegram-plane ml-2"></i>
+                            ارتباط با پشتیبانی تلگرام
+                        </a>
+                        <% } %>
+                        <% if (!telegramLink) { %>
+                        <p class="text-gray-400 text-center">در حال حاضر کانال پشتیبانی در دسترس نیست. لطفاً بعداً بررسی کنید.</p>
+                        <% } %>
+                    </div>
                 </div>
             </div>
-            </div>
         </div>
-    <% } %>
     </div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const MusicPlayer = () => {
+const [tracks] = useState([
+    { id: 1, title: "مرتضی پاشایی", artist: "آره هوس تورو", src: "https://nicmusic.musitraf.com/nicmusic/001/065/Morteza%20Pashaei%20-%20Nafas.mp3" },
+    { id: 2, title: "مرتضی پاشایی", artist: "قلبم رو تکراره", src: "https://nicmusic.musitraf.com/nicmusic/004/026/Moreta%20Pashaei%20-%20Ghalbam%20Roo%20Tekrare.mp3" },
+    { id: 3, title: "مرتضی پاشایی", artist: "حالا حالاها", src: "https://nicmusic.musitraf.com/nicmusic/003/094/10.%20Hala%20Hala%20Ha%20[128].mp3" },
+    { id: 4, title: "مرتضی پاشایی", artist: "یه نفر", src: "https://nicmusic.musitraf.com/nicmusic/001/029/Morteza%20Pashaei%20-%20Yeki%20Hast.mp3" }
+]);
+            const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [currentTime, setCurrentTime] = useState(0);
+            const [duration, setDuration] = useState(0);
+            const [volume, setVolume] = useState(1);
+            const [isMuted, setIsMuted] = useState(false);
+            const audioRef = useRef(new Audio());
+
+            // مدیریت بارگذاری و پخش آهنگ
+            useEffect(() => {
+                console.log(`بارگذاری آهنگ ${currentTrackIndex + 1}: ${tracks[currentTrackIndex].title}`);
+                audioRef.current.src = tracks[currentTrackIndex].src;
+                audioRef.current.load();
+                audioRef.current.volume = isMuted ? 0 : volume;
+
+                if (isPlaying) {
+                    audioRef.current.play().catch((error) => console.error("خطا در پخش آهنگ:", error));
+                }
+
+                return () => {
+                    audioRef.current.pause();
+                };
+            }, [currentTrackIndex, tracks]);
+
+            // مدیریت رویدادهای صوتی (زمان و مدت)
+            useEffect(() => {
+                const updateTime = () => setCurrentTime(audioRef.current.currentTime);
+                const updateDuration = () => setDuration(audioRef.current.duration);
+
+                audioRef.current.addEventListener('timeupdate', updateTime);
+                audioRef.current.addEventListener('loadedmetadata', updateDuration);
+
+                return () => {
+                    audioRef.current.removeEventListener('timeupdate', updateTime);
+                    audioRef.current.removeEventListener('loadedmetadata', updateDuration);
+                };
+            }, []);
+
+            // مدیریت رویداد پایان آهنگ
+            useEffect(() => {
+                const handleEnded = () => {
+                    console.log(`آهنگ ${currentTrackIndex + 1} تموم شد. رفتن به آهنگ بعدی...`);
+                    nextTrack();
+                };
+
+                audioRef.current.addEventListener('ended', handleEnded);
+
+                return () => {
+                    audioRef.current.removeEventListener('ended', handleEnded);
+                };
+            }, [currentTrackIndex]);
+
+            // مدیریت وضعیت پخش/توقف
+            useEffect(() => {
+                if (isPlaying) {
+                    audioRef.current.play().catch((error) => console.error("خطا در پخش آهنگ:", error));
+                } else {
+                    audioRef.current.pause();
+                }
+            }, [isPlaying]);
+
+            // مدیریت صدا
+            useEffect(() => {
+                audioRef.current.volume = isMuted ? 0 : volume;
+            }, [volume, isMuted]);
+
+            const playPause = () => setIsPlaying(!isPlaying);
+
+            const stop = () => {
+                setIsPlaying(false);
+                audioRef.current.currentTime = 0;
+                setCurrentTime(0);
+            };
+
+            const nextTrack = () => {
+                const nextIndex = (currentTrackIndex + 1) % tracks.length;
+                console.log(`تغییر به آهنگ ${nextIndex + 1}: ${tracks[nextIndex].title}`);
+                setCurrentTrackIndex(nextIndex);
+                setCurrentTime(0);
+                setIsPlaying(true);
+            };
+
+            const prevTrack = () => {
+                const prevIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+                console.log(`تغییر به آهنگ ${prevIndex + 1}: ${tracks[prevIndex].title}`);
+                setCurrentTrackIndex(prevIndex);
+                setCurrentTime(0);
+                setIsPlaying(true);
+            };
+
+            const handleSeek = (e) => {
+                const time = parseFloat(e.target.value);
+                audioRef.current.currentTime = time;
+                setCurrentTime(time);
+            };
+
+            const handleVolume = (e) => {
+                const vol = parseFloat(e.target.value);
+                setVolume(vol);
+                setIsMuted(false);
+            };
+
+            const toggleMute = () => {
+                setIsMuted(!isMuted);
+            };
+
+            const formatTime = (time) => {
+                const minutes = Math.floor(time / 60);
+                const seconds = Math.floor(time % 60);
+                return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+
+            return (
+                <div className="flex flex-col items-center music-player-container">
+                    <div className="text-sm truncate w-full text-center mb-2">
+                        <p className="font-semibold">{tracks[currentTrackIndex].title}</p>
+                        <p className="textPSO-gray-400">{tracks[currentTrackIndex].artist}</p>
+                    </div>
+                    <div className="music-player-controls">
+                        <button onClick={prevTrack} className="p-1 rounded-full hover:bg-gray-700">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button onClick={stop} className="p-1 rounded-full hover:bg-gray-700">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 6h12v12H6z" />
+                            </svg>
+                        </button>
+                        <button onClick={playPause} className="p-2 bg-blue-500 rounded-full hover:bg-blue-600">
+                            {isPlaying ? (
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 9v6m4-6v6" />
+                                </svg>
+                            ) : (
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            )}
+                        </button>
+                        <button onClick={nextTrack} className="p-1 rounded-full hover:bg-gray-700">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                        <input
+                            type="range"
+                            min="0"
+                            max={duration}
+                            value={currentTime}
+                            onChange={handleSeek}
+                            className="h-1 bg-gray-600 rounded-full appearance-none cursor-pointer music-player-seek"
+                        />
+                        <span className="text-xs text-gray-400">{formatTime(currentTime)} / {formatTime(duration)}</span>
+                        <button onClick={toggleMute} className="p-1 rounded-full mute-button">
+                            {isMuted || volume === 0 ? (
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.586 5.586a2 2 0 000 2.828L9.172 12l-3.586 3.586a2 2 0 000 2.828 2 2 0 002.828 0L12 14.828l3.586 3.586a2 2 0 002.828 0 2 2 0 000-2.828L14.828 12l3.586-3.586a2 2 0 000-2.828 2 2 0 00-2.828 0L12 9.172 8.414 5.586a2 2 0 00-2.828 0z" />
+                                </svg>
+                            ) : (
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 4v16a1 1 0 01-1.707.707L5.586 15z" />
+                                </svg>
+                            )}
+                        </button>
+                        <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            value={volume}
+                            onChange={handleVolume}
+                            className="h-1 bg-gray-600 rounded-full appearance-none cursor-pointer music-player-volume"
+                        />
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<MusicPlayer />, document.getElementById('music-player'));
+    </script>
 
     <script>
         function toggleTheme() {
             document.body.classList.toggle('light');
             const themeButton = document.getElementById('theme-toggle');
             if (document.body.classList.contains('light')) {
-                themeButton.innerHTML = `<svg <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17.293 13.293A8 8 0 116.707 2.707 8 8 0 0017.293  13.293z"/>
-        </svg>`;
+                themeButton.innerHTML = `<svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.293 13.293A8 8 0 116.707 2.707 8 8 0 0017.293 13.293z"/>
+                </svg>`;
             } else {
                 themeButton.innerHTML = `<svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-            d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364 6.364l-1.414-1.414M6.05 6.05L4.636 4.636m12.728 0L18.364 4.636M6.05 17.95l-1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z" />
-        </svg>`;
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364 6.364l-1.414-1.414M6.05 6.05L4.636 4.636m12.728 0L18.364 4.636M6.05 17.95l-1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                </svg>`;
             }
         }
 
@@ -372,21 +612,17 @@
 
         async function copyToClipboard(text) {
             try {
-                // روش مدرن (Clipboard API)
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     await navigator.clipboard.writeText(text);
                     alert('کپی شد');
                     console.log('کپی شد');
                     return;
                 }
-                
-                // روش قدیمی (fallback)
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
-                textarea.style.position = 'fixed'; // خارج از صفحه
+                textarea.style.position = 'fixed';
                 document.body.appendChild(textarea);
                 textarea.select();
-                
                 try {
                     const successful = document.execCommand('copy');
                     if (successful) {
@@ -396,14 +632,12 @@
                     }
                 } catch (err) {
                     alert('کپی نشد:', err);
-                    // نمایش متن به کاربر برای کپی دستی
                     alert('لطفاً متن زیر را کپی کنید:\n\n' + text);
                 } finally {
                     document.body.removeChild(textarea);
                 }
             } catch (err) {
                 alert('کپی نشد:', err);
-                // نمایش متن به کاربر برای کپی دستی
                 alert('لطفاً متن زیر را کپی کنید:\n\n' + text);
             }
         }
@@ -419,15 +653,6 @@
             const icon = document.getElementById('dropdownIcon');
             content.classList.toggle('hidden');
             icon.classList.toggle('rotate-180');
-        }
-
-        function toggleTutorial(id) {
-            const item = document.querySelector(`[onclick="toggleTutorial('${id}')"]`).parentElement;
-            const content = item.querySelector('.tutorial-content');
-            const icon = item.querySelector('.tutorial-icon');
-
-            content.classList.toggle('hidden');
-            icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
         }
 
         const totalByte = parseInt('<%= data.total %>', 10);
@@ -447,76 +672,20 @@
         }
 
         const expireValue = '<%= data.expiryTime %>';
-        const expireTimestamp = parseInt(expireValue, 10) * 1000;
+        const expireTimestamp = parseInt(expireValue, 10);
         const expireDateElement = document.getElementById('expireDate');
 
         if (expireValue === '0') {
             expireDateElement.textContent = 'برای همیشه';
         } else {
             const expireDate = new Date(expireTimestamp);
-            const gy = expireDate.getFullYear();
-            const gm = expireDate.getMonth() + 1;
-            const gd = expireDate.getDate();
-            const { jy, jm, jd } = jalaali.toJalaali(gy, gm, gd);
-            expireDateElement.textContent = `${jy}/${jm}/${jd}`;
-
-            const now = new Date();
-            let diff = expireTimestamp - now.getTime();
-
-            let remainingTime = "";
-            if (diff > 0) {
-                const daysRemaining = Math.floor(diff / (1000 * 60 * 60 * 24));
-                if (daysRemaining > 0) {
-                    remainingTime = daysRemaining + " روز";
-                } else {
-                    const hoursRemaining = Math.floor(diff / (1000 * 60 * 60));
-                    remainingTime = hoursRemaining + " ساعت";
-                }
-            } else {
-                remainingTime = "منقضی شده";
-            }
-
-            expireDateElement.textContent += "";
-
-            const remainingTimeElement = document.getElementById('remainingTime');
-            if (remainingTimeElement) {
-                remainingTimeElement.textContent = remainingTime;
-            }
+            const { jy, jm, jd } = jalaali.toJalaali(expireDate);
+            // Format day and month to always show 2 digits, year as 4 digits, in YYYY/MM/DD order
+            const formattedDay = jd.toString().padStart(2, '0');
+            const formattedMonth = jm.toString().padStart(2, '0');
+            const formattedYear = jy.toString().padStart(4, '0');
+            expireDateElement.textContent = `${formattedYear}/${formattedMonth}/${formattedDay}`;
         }
-
-        const statusElement = document.getElementById('status');
-        if (totalByte === 0) {
-            statusElement.textContent = 'نامحدود';
-        } else if (expireTimestamp >= Date.now() && usedBytes <= totalByte) {
-            statusElement.textContent = 'فعال';
-        } else {
-            statusElement.textContent = 'غیرفعال';
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            try {
-                const qr = new QRious({
-                    element: document.getElementById('qrcode'),
-                    value: '<%= data.suburl %>',
-                    size: 200,
-                    level: 'H',
-                    background: '#ffffff',
-                    foreground: '#000000',
-                    padding: 16
-                });
-            } catch (error) {
-                alert('Error generating QR code:', error);
-                const qrcodeElement = document.getElementById('qrcode');
-                if (qrcodeElement) {
-                    qrcodeElement.insertAdjacentHTML('afterend', '<p class="text-red-500 mt-2">خطا در ایجاد کد QR</p>');
-                }
-            }
-        });
     </script>
 </body>
-
 </html>
-<!--
-Original Credit : https://github.com/AghayeCoder/TX-ThemeHub/blob/main/themes/fly.html
-Modified and Ported for @dvhost_cloud
--->
